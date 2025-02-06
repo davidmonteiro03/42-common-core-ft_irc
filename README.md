@@ -1,1 +1,0 @@
-# 42cursus-ft_irc
