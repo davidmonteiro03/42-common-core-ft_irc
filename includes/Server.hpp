@@ -6,12 +6,11 @@
 /*   By: dcaetano <dcaetano@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 19:31:28 by dcaetano          #+#    #+#             */
-/*   Updated: 2024/05/23 11:31:11 by dcaetano         ###   ########.fr       */
+/*   Updated: 2025/02/16 10:13:25 by dcaetano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef SERVER_HPP
-#define SERVER_HPP
+#pragma once
 
 class Server
 {
@@ -94,5 +93,3 @@ public:
 		virtual const char *what() const throw();
 	};
 };
-
-#endif

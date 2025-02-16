@@ -6,46 +6,46 @@
 #    By: dcaetano <dcaetano@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/05/07 19:12:17 by dcaetano          #+#    #+#              #
-#    Updated: 2024/08/29 12:52:39 by dcaetano         ###   ########.fr        #
+#    Updated: 2025/02/16 10:39:08 by dcaetano         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-CXX = c++
-RM = rm -rf
-AR = ar rcs
+CXX      = c++
+RM       = rm -rf
+AR       = ar rcs
 
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -O3
 
-INCS = ./includes/
+INCS     = ./includes/
 
-NAME = ircserv
-SRCS = ./main.cpp
-OBJS = $(SRCS:.cpp=.o)
+NAME     = ircserv
+SRCS     = ./main.cpp
+OBJS     = $(SRCS:.cpp=.o)
 
-LIB = $(NAME).a
-SRCS_LIB = ./srcs/Server.cpp ./srcs/Client.cpp \
-	./srcs/Channel.cpp ./srcs/utils.cpp ./srcs/Bot.cpp
+LIB      = $(NAME).a
+SRCS_LIB = ./srcs/Server.cpp ./srcs/Client.cpp ./srcs/Channel.cpp \
+           ./srcs/utils.cpp ./srcs/Bot.cpp
 OBJS_LIB = $(SRCS_LIB:.cpp=.o)
 
 all: $(NAME)
 
 $(OBJS): %.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(OBJS_LIB): %.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 $(NAME): $(OBJS) $(LIB)
-	$(CXX) $(CXXFLAGS) -I$(INCS) $(OBJS) $(LIB) -o $(NAME)
+	@$(CXX) $(CXXFLAGS) -I$(INCS) $(OBJS) $(LIB) -o $(NAME)
 
 $(LIB): $(OBJS_LIB)
-	$(AR) $(LIB) $(OBJS_LIB) $(OBJS_LIB)
+	@$(AR) $(LIB) $(OBJS_LIB) $(OBJS_LIB)
 
 clean:
-	$(RM) $(OBJS_LIB) $(OBJS)
+	@$(RM) $(OBJS_LIB) $(OBJS)
 
 fclean: clean
-	$(RM) $(LIB) $(NAME)
+	@$(RM) $(LIB) $(NAME)
 
 re: fclean all
 

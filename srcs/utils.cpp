@@ -6,7 +6,7 @@
 /*   By: dcaetano <dcaetano@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 19:44:35 by dcaetano          #+#    #+#             */
-/*   Updated: 2024/05/23 14:01:21 by dcaetano         ###   ########.fr       */
+/*   Updated: 2025/02/16 10:37:56 by dcaetano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,10 @@ t_socket newSocket(const char *arg)
 	struct hostent *host_entry = gethostbyname(ret.hostname);
 	if (host_entry == NULL)
 		throw Server::ErrorGettingHostname();
-	ret.ip = inet_ntoa(*((struct in_addr*)host_entry->h_addr_list[0]));
+	ret.ip = inet_ntoa(*((struct in_addr *)host_entry->h_addr_list[0]));
 	if (ret.ip == NULL)
 		throw Server::ErrorGettingIP();
-	return (ret);
+	return ret;
 }
 
 t_args ft_split(t_string str)
@@ -63,7 +63,7 @@ t_args ft_split(t_string str)
 		while (str[it] != '\0' && std::isspace(str[it]) != 0)
 			it++;
 	}
-	return (ret);
+	return ret;
 }
 
 t_args ft_split(t_string str, char c)
@@ -85,7 +85,7 @@ t_args ft_split(t_string str, char c)
 		while (str[it] != '\0' && str[it] == c)
 			it++;
 	}
-	return (ret);
+	return ret;
 }
 
 void ft_printargs(t_args args, t_string type)
@@ -104,8 +104,7 @@ void ft_printinput(t_input input)
 {
 	std::cout << "------ Input -----\n";
 	ft_printargs(input.first, "args");
-	std::cout << "text: \"" << input.second << "\"";
-	std::cout << std::endl
+	std::cout << "text: \"" << input.second << "\"" << std::endl
 			  << std::endl;
 }
 
@@ -132,7 +131,7 @@ size_t ft_findstr(t_string str)
 		while (str[it] != '\0' && std::isspace(str[it]) != 0)
 			it++;
 	}
-	return (t_string::npos);
+	return t_string::npos;
 }
 
 t_input getInput(t_string line)
@@ -156,53 +155,47 @@ t_input getInput(t_string line)
 		size_t tmp_pos = ft_findstr(line);
 		ret.second = line.substr(tmp_pos + 1, line.size() - (tmp_pos + 1));
 	}
-	return (ret);
+	return ret;
 }
 
 bool checkName(t_string name)
 {
 	if (name.empty())
-		return (false);
+		return false;
 	if (name[0] == '#')
-		return (false);
+		return false;
 	size_t i = 0;
 	for (i = 0; i < name.size(); i++)
 		if (std::isspace(name[i]))
-			return (false);
-	return (true);
+			return false;
+	return true;
 }
 
 bool checkChannel(t_string name)
 {
 	if (name.empty())
-		return (false);
+		return false;
 	if (name[0] != '#')
-		return (false);
+		return false;
 	size_t i = 0;
 	for (i = 0; i < name.size(); i++)
 		if (std::isspace(name[i]))
-			return (false);
-	return (true);
+			return false;
+	return true;
 }
 
 const t_string getClientSintax(const Client *client)
 {
 	if (client->getNick().empty())
-		return ((const t_string)hostname);
+		return (const t_string)hostname;
 	if (client->getUser().empty())
-		return (client->getNick() + "!d@" + hostname);
-	return (client->getNick() + "!~" + client->getUser() + "@" + hostname);
+		return client->getNick() + "!d@" + hostname;
+	return client->getNick() + "!~" + client->getUser() + "@" + hostname;
 }
 
-const t_string getNicknameSintax(const Client *client)
-{
-	return (client->getNick().empty() ? "*" : client->getNick());
-}
+const t_string getNicknameSintax(const Client *client) { return client->getNick().empty() ? "*" : client->getNick(); }
 
-const t_string getUsernameSintax(const Client *client)
-{
-	return ("~" + client->getNick() + "@" + hostname);
-}
+const t_string getUsernameSintax(const Client *client) { return "~" + client->getNick() + "@" + hostname; }
 
 t_string getTargets(Channel *channel)
 {
@@ -223,7 +216,7 @@ t_string getTargets(Channel *channel)
 		targets += "@" + ops[i]->getNick();
 		tmp++;
 	}
-	return (targets);
+	return targets;
 }
 
 bool sendMessage(int fd, t_string message)
@@ -243,17 +236,17 @@ bool welcomeMessage(Client *client)
 	welcome += "██║        ██║       ██║██║  ██║╚██████╗\n";
 	welcome += "╚═╝        ╚═╝       ╚═╝╚═╝  ╚═╝ ╚═════╝\n";
 	logs("server", getInfoClient(client) + " " + LOG_AUTHENTICATED);
-	return (sendMessage(client->getFd(), welcome));
+	return sendMessage(client->getFd(), welcome);
 }
 
 void welcomeMessage(void)
 {
-	std::cout << "\t███████╗████████╗    ██╗██████╗  ██████╗" << std::endl;
-	std::cout << "\t██╔════╝╚══██╔══╝    ██║██╔══██╗██╔════╝" << std::endl;
-	std::cout << "\t█████╗     ██║       ██║██████╔╝██║" << std::endl;
-	std::cout << "\t██╔══╝     ██║       ██║██╔══██╗██║" << std::endl;
-	std::cout << "\t██║        ██║       ██║██║  ██║╚██████╗" << std::endl;
-	std::cout << "\t╚═╝        ╚═╝       ╚═╝╚═╝  ╚═╝ ╚═════╝" << std::endl;
+	std::cout << "\t███████╗████████╗    ██╗██████╗  ██████╗" << std::endl
+			  << "\t██╔════╝╚══██╔══╝    ██║██╔══██╗██╔════╝" << std::endl
+			  << "\t█████╗     ██║       ██║██████╔╝██║" << std::endl
+			  << "\t██╔══╝     ██║       ██║██╔══██╗██║" << std::endl
+			  << "\t██║        ██║       ██║██║  ██║╚██████╗" << std::endl
+			  << "\t╚═╝        ╚═╝       ╚═╝╚═╝  ╚═╝ ╚═════╝" << std::endl;
 }
 
 t_string ft_getwordpos(t_string line, size_t pos)
@@ -279,7 +272,7 @@ t_string ft_getwordpos(t_string line, size_t pos)
 		while (line[it] != '\0' && std::isspace(line[it]) != 0)
 			it++;
 	}
-	return (t_string());
+	return t_string();
 }
 
 t_args getArgsPro(t_input input, size_t start_pos)
@@ -291,7 +284,7 @@ t_args getArgsPro(t_input input, size_t start_pos)
 		ret.push_back(input.first[i]);
 	if (!input.second.empty())
 		ret.push_back(input.second);
-	return (ret);
+	return ret;
 }
 
 t_args getModeFlags(t_string mode)
@@ -327,7 +320,7 @@ t_args getModeFlags(t_string mode)
 			i++;
 		}
 	}
-	return (ret);
+	return ret;
 }
 
 t_string getModes(Channel *channel)
@@ -352,7 +345,7 @@ t_string getModes(Channel *channel)
 		ss << channel->getKey();
 		values += " " + ss.str();
 	}
-	return (flags + values);
+	return flags + values;
 }
 
 t_args copyFromPos(t_args args, size_t pos)
@@ -361,7 +354,7 @@ t_args copyFromPos(t_args args, size_t pos)
 
 	for (size_t i = pos; i < args.size(); i++)
 		ret.push_back(args[i]);
-	return (ret);
+	return ret;
 }
 
 bool ft_findarg(t_args args, t_string str)
@@ -370,8 +363,8 @@ bool ft_findarg(t_args args, t_string str)
 
 	for (size_t i = 0; i < args.size(); i++)
 		if (args[i][1] == str[1])
-			return (true);
-	return (false);
+			return true;
+	return false;
 }
 
 t_string getInfoClient(Client *client)
@@ -379,8 +372,8 @@ t_string getInfoClient(Client *client)
 	std::stringstream ss;
 	ss << client->getFd();
 	if (client->getClient() == hostname)
-		return (INFO_SOCKET(ss.str()));
-	return (client->getClient());
+		return INFO_SOCKET(ss.str());
+	return client->getClient();
 }
 
 void logs(t_string place, t_string message) { std::cout << place << ": " << message << std::endl; }
@@ -394,7 +387,7 @@ bool isValidLimit(t_string limit)
 	if (limit[i] == '+' || limit[i] == '-')
 		if (limit[i++] == '-')
 			sign = -1;
-	return (sign > 0 && limit[i] != '\0' && isdigit(limit[i]));
+	return sign > 0 && limit[i] != '\0' && isdigit(limit[i]);
 }
 
 bool checkPort(const char *arg)
@@ -409,9 +402,9 @@ bool checkPort(const char *arg)
 	{
 		tmp = tmp * 10 + *arg++ - '0';
 		if (tmp * sign <= 0 || tmp * sign > 65535)
-			return (false);
+			return false;
 	}
 	if (tmp * sign <= 0 || tmp * sign > 65535)
-		return (false);
-	return (true);
+		return false;
+	return true;
 }

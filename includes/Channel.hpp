@@ -6,12 +6,11 @@
 /*   By: dcaetano <dcaetano@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 11:47:33 by dcaetano          #+#    #+#             */
-/*   Updated: 2024/05/23 17:36:08 by dcaetano         ###   ########.fr       */
+/*   Updated: 2025/02/16 10:09:29 by dcaetano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CHANNEL_HPP
-#define CHANNEL_HPP
+#pragma once
 
 class Channel
 {
@@ -65,5 +64,3 @@ public:
 	bool kickUser(Client *, Client *, t_args);
 	t_string getCreationTime(void) const;
 };
-
-#endif

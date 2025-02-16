@@ -6,7 +6,7 @@
 /*   By: dcaetano <dcaetano@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 19:15:13 by dcaetano          #+#    #+#             */
-/*   Updated: 2024/05/23 11:02:51 by dcaetano         ###   ########.fr       */
+/*   Updated: 2025/02/16 10:38:16 by dcaetano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int main(int argc, char **argv)
 	catch (std::exception &e)
 	{
 		std::cout << e.what() << std::endl;
-		return (EXIT_FAILURE);
+		return EXIT_FAILURE;
 	}
-	return ((void)argc, (void)argv, EXIT_SUCCESS);
+	return (void)argc, (void)argv, EXIT_SUCCESS;
 }

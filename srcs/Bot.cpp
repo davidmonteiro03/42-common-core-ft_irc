@@ -6,7 +6,7 @@
 /*   By: dcaetano <dcaetano@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 16:33:53 by dcaetano          #+#    #+#             */
-/*   Updated: 2024/05/24 11:49:08 by dcaetano         ###   ########.fr       */
+/*   Updated: 2025/02/16 10:14:30 by dcaetano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,8 @@ size_t Bot::getClientLevel(t_string nick)
 {
 	for (size_t i = 0; i < _stats.size(); i++)
 		if (_stats[i].first->getNick() == nick)
-			return (_stats[i].second / 10);
-	return (-1);
+			return _stats[i].second / 10;
+	return -1;
 }
 
 void Bot::checkStats(Client *client, t_string nick, bool mode)
@@ -74,5 +74,5 @@ void Bot::removeClient(Client *client)
 	t_stats::iterator it;
 	for (it = _stats.begin(); it != _stats.end(); it++)
 		if (it->first == client)
-			return (_stats.erase(it), void());
+			return _stats.erase(it), void();
 }

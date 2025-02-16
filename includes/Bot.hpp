@@ -6,12 +6,11 @@
 /*   By: dcaetano <dcaetano@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/21 08:39:14 by dcaetano          #+#    #+#             */
-/*   Updated: 2024/05/21 08:39:46 by dcaetano         ###   ########.fr       */
+/*   Updated: 2025/02/16 10:09:17 by dcaetano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BOT_HPP
-#define BOT_HPP
+#pragma once
 
 class Bot
 {
@@ -32,5 +31,3 @@ public:
 	size_t getClientLevel(t_string);
 	t_string getName();
 };
-
-#endif

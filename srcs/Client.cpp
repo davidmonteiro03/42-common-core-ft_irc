@@ -6,7 +6,7 @@
 /*   By: dcaetano <dcaetano@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/08 14:17:04 by dcaetano          #+#    #+#             */
-/*   Updated: 2024/05/23 13:19:25 by dcaetano         ###   ########.fr       */
+/*   Updated: 2025/02/16 10:20:17 by dcaetano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,34 +28,34 @@ Client::Client(t_string name) : _fd(-1), _logged(true), _user(name), _nick(name)
 
 Client::~Client() { _channels.clear(); }
 
-int Client::getFd(void) const { return (_fd); }
+int Client::getFd(void) const { return _fd; }
 
-bool Client::isLogged(void) const { return (_logged); }
+bool Client::isLogged(void) const { return _logged; }
 
 bool Client::getStatus(void) const
 {
 	for (int i = 0; i < 3; i++)
 		if (_status[i] == false)
-			return (false);
-	return (true);
+			return false;
+	return true;
 }
 
 bool Client::getStatus(int pos) const
 {
 	if (pos < 0 || pos > 2)
-		return (false);
-	return (_status[pos]);
+		return false;
+	return _status[pos];
 }
 
-t_string Client::getUser(void) const { return (_user); }
+t_string Client::getUser(void) const { return _user; }
 
-t_string Client::getNick(void) const { return (_nick); }
+t_string Client::getNick(void) const { return _nick; }
 
-t_string Client::getClient(void) const { return (getClientSintax(this)); }
+t_string Client::getClient(void) const { return getClientSintax(this); }
 
-t_string Client::getNickname(void) const { return (getNicknameSintax(this)); }
+t_string Client::getNickname(void) const { return getNicknameSintax(this); }
 
-t_string Client::getUsername(void) const { return (getUsernameSintax(this)); }
+t_string Client::getUsername(void) const { return getUsernameSintax(this); }
 
 void Client::login(void)
 {
@@ -90,7 +90,7 @@ void Client::joinChannel(Channel *channel) { _channels.push_back(channel); }
 void Client::partChannel(Channel *channel)
 {
 	if (channel == NULL)
-		return ;
+		return;
 	t_channels::iterator it;
 	for (it = _channels.begin(); it != _channels.end(); it++)
 	{
@@ -110,7 +110,7 @@ void Client::partChannel(Channel *channel)
 void Client::partChannel(Channel *channel, t_string reason)
 {
 	if (channel == NULL)
-		return ;
+		return;
 	t_channels::iterator it;
 	for (it = _channels.begin(); it != _channels.end(); it++)
 	{

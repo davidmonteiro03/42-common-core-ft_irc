@@ -6,7 +6,7 @@
 /*   By: dcaetano <dcaetano@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/10 11:48:46 by dcaetano          #+#    #+#             */
-/*   Updated: 2024/05/23 17:37:02 by dcaetano         ###   ########.fr       */
+/*   Updated: 2025/02/16 10:19:05 by dcaetano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,21 +31,21 @@ Channel::~Channel()
 	_invited.clear();
 }
 
-t_string Channel::getName(void) const { return (_name); }
+t_string Channel::getName(void) const { return _name; }
 
-t_string Channel::getKey(void) const { return (_key); }
+t_string Channel::getKey(void) const { return _key; }
 
-t_string Channel::getTopic(void) const { return (_topic); }
+t_string Channel::getTopic(void) const { return _topic; }
 
-t_users Channel::getUsers(void) const { return (_users); }
+t_users Channel::getUsers(void) const { return _users; }
 
-t_users Channel::getOperators(void) const { return (_operators); }
+t_users Channel::getOperators(void) const { return _operators; }
 
-bool Channel::getInviteFlag(void) const { return (_inviteOnly); }
+bool Channel::getInviteFlag(void) const { return _inviteOnly; }
 
-bool Channel::getTopicFlag(void) const { return (_topicRest); }
+bool Channel::getTopicFlag(void) const { return _topicRest; }
 
-size_t Channel::getLimit(void) const { return (_limit); }
+size_t Channel::getLimit(void) const { return _limit; }
 
 t_string Channel::getCreationTime(void) const
 {
@@ -68,7 +68,7 @@ void Channel::addOperator(Client *op, bool mode)
 		_bot->addStats(op);
 }
 
-size_t Channel::countUsers() { return (_users.size() + _operators.size()); }
+size_t Channel::countUsers() { return _users.size() + _operators.size(); }
 
 void Channel::addInvited(Client *client, Client *inv)
 {
@@ -97,7 +97,7 @@ void Channel::removeUser(Client *user)
 		if (*it == user)
 		{
 			_users.erase(it);
-			return (_bot->removeClient(user));
+			return _bot->removeClient(user);
 		}
 	}
 }
@@ -123,7 +123,7 @@ void Channel::removeOperator(Client *op)
 		if (*it == op)
 		{
 			_operators.erase(it);
-			return (_bot->removeClient(op));
+			return _bot->removeClient(op);
 		}
 	}
 }
@@ -164,7 +164,7 @@ bool Channel::changeMode(Client *client, t_string flag, t_string arg, t_string &
 			res = true;
 	if (res)
 		_bot->updateStats(client);
-	return (res);
+	return res;
 }
 
 bool Channel::changeMode(Client *client, t_string flag, t_string &flags_str)
@@ -181,7 +181,7 @@ bool Channel::changeMode(Client *client, t_string flag, t_string &flags_str)
 			res = true;
 	if (res)
 		_bot->updateStats(client);
-	return (res);
+	return res;
 }
 
 bool Channel::changeKey(Client *client, t_string flag, t_string arg, t_string &flags_str, t_string &args_str)
@@ -192,7 +192,7 @@ bool Channel::changeKey(Client *client, t_string flag, t_string arg, t_string &f
 		flags_str += flag;
 		args_str += " " + arg;
 		logs(_name, client->getNick() + " sets channel keyword to " + arg);
-		return (true);
+		return true;
 	}
 	if (!_key.empty() && flag[0] == '-')
 	{
@@ -200,9 +200,9 @@ bool Channel::changeKey(Client *client, t_string flag, t_string arg, t_string &f
 		flags_str += flag;
 		args_str += " " + arg;
 		logs(_name, client->getNick() + " removes channel keyword");
-		return (true);
+		return true;
 	}
-	return (false);
+	return false;
 }
 
 bool Channel::changeOperator(Client *client, t_string flag, t_string arg, t_string &flags_str, t_string &args_str)
@@ -212,7 +212,7 @@ bool Channel::changeOperator(Client *client, t_string flag, t_string arg, t_stri
 		t_users::iterator it;
 		for (it = _operators.begin(); it != _operators.end(); it++)
 			if ((*it)->getNick() == arg)
-				return (false);
+				return false;
 		for (it = _users.begin(); it != _users.end(); it++)
 		{
 			if ((*it)->getNick() == arg)
@@ -222,17 +222,17 @@ bool Channel::changeOperator(Client *client, t_string flag, t_string arg, t_stri
 				flags_str += flag;
 				args_str += " " + arg;
 				logs(_name, client->getNick() + " gives channel operator status to " + arg);
-				return (true);
+				return true;
 			}
 		}
-		return (sendMessage(client->getFd(), ERR_USERNOTINCHANNEL(hostname, client->getNickname(), arg, _name)));
+		return sendMessage(client->getFd(), ERR_USERNOTINCHANNEL(hostname, client->getNickname(), arg, _name));
 	}
 	if (flag[0] == '-')
 	{
 		t_users::iterator it;
 		for (it = _users.begin(); it != _users.end(); it++)
 			if ((*it)->getNick() == arg)
-				return (false);
+				return false;
 		for (it = _operators.begin(); it != _operators.end(); it++)
 		{
 			if ((*it)->getNick() == arg)
@@ -242,45 +242,45 @@ bool Channel::changeOperator(Client *client, t_string flag, t_string arg, t_stri
 				flags_str += flag;
 				args_str += " " + arg;
 				logs(_name, client->getNick() + " removes channel operator status to " + arg);
-				return (true);
+				return true;
 			}
 		}
-		return (sendMessage(client->getFd(), ERR_USERNOTINCHANNEL(hostname, client->getNickname(), arg, _name)));
+		return sendMessage(client->getFd(), ERR_USERNOTINCHANNEL(hostname, client->getNickname(), arg, _name));
 	}
-	return (false);
+	return false;
 }
 
 bool Channel::changeLimit(Client *client, t_string flag, t_string arg, t_string &flags_str, t_string &args_str)
 {
 	std::stringstream ss(arg);
 	if (!isValidLimit(ss.str()))
-		return (false);
+		return false;
 	size_t new_limit, channel_l;
 	ss >> new_limit;
 	channel_l = countUsers();
 	if (new_limit == std::numeric_limits<size_t>::max())
-		return (false);
+		return false;
 	if (new_limit < channel_l)
-		return (false);
+		return false;
 	if (_limit == new_limit)
-		return (false);
+		return false;
 	std::stringstream ret;
 	ret << new_limit;
 	_limit = new_limit;
 	flags_str += flag;
 	args_str += " " + ret.str();
 	logs(_name, client->getNick() + " sets channel limit to " + ret.str());
-	return (false);
+	return false;
 }
 
 bool Channel::resetLimit(Client *client, t_string &flags_str)
 {
 	if (_limit == std::numeric_limits<size_t>::max())
-		return (false);
+		return false;
 	_limit = std::numeric_limits<size_t>::max();
 	flags_str += "-l";
 	logs(_name, client->getNick() + " removes user limit");
-	return (true);
+	return true;
 }
 
 bool Channel::changeInvite(Client *client, t_string flag, t_string &flags_str)
@@ -290,7 +290,7 @@ bool Channel::changeInvite(Client *client, t_string flag, t_string &flags_str)
 		_inviteOnly = true;
 		flags_str += flag;
 		logs(_name, LOG_MODE(client->getNick(), flag, _name));
-		return (true);
+		return true;
 	}
 	if (flag == "-i" && _inviteOnly == true)
 	{
@@ -298,9 +298,9 @@ bool Channel::changeInvite(Client *client, t_string flag, t_string &flags_str)
 		flags_str += flag;
 		_invited.clear();
 		logs(_name, LOG_MODE(client->getNick(), flag, _name));
-		return (true);
+		return true;
 	}
-	return (false);
+	return false;
 }
 
 bool Channel::changeTopicRes(Client *client, t_string flag, t_string &flags_str)
@@ -310,16 +310,16 @@ bool Channel::changeTopicRes(Client *client, t_string flag, t_string &flags_str)
 		_topicRest = true;
 		flags_str += flag;
 		logs(_name, LOG_MODE(client->getNick(), flag, _name));
-		return (true);
+		return true;
 	}
 	if (flag == "-t" && _topicRest == true)
 	{
 		_topicRest = false;
 		flags_str += flag;
 		logs(_name, LOG_MODE(client->getNick(), flag, _name));
-		return (true);
+		return true;
 	}
-	return (false);
+	return false;
 }
 
 bool Channel::isInChannel(Client *client)
@@ -327,11 +327,11 @@ bool Channel::isInChannel(Client *client)
 	t_users::iterator it_op, it_usr;
 	for (it_op = _operators.begin(); it_op != _operators.end(); it_op++)
 		if (*it_op == client)
-			return (true);
+			return true;
 	for (it_usr = _users.begin(); it_usr != _users.end(); it_usr++)
 		if (*it_usr == client)
-			return (true);
-	return (false);
+			return true;
+	return false;
 }
 
 bool Channel::isInChannel(t_string name)
@@ -339,11 +339,11 @@ bool Channel::isInChannel(t_string name)
 	t_users::iterator it_op, it_usr;
 	for (it_op = _operators.begin(); it_op != _operators.end(); it_op++)
 		if ((*it_op)->getNick() == name)
-			return (true);
+			return true;
 	for (it_usr = _users.begin(); it_usr != _users.end(); it_usr++)
 		if ((*it_usr)->getNick() == name)
-			return (true);
-	return (false);
+			return true;
+	return false;
 }
 
 bool Channel::isOperator(Client *client)
@@ -351,8 +351,8 @@ bool Channel::isOperator(Client *client)
 	t_users::iterator it;
 	for (it = _operators.begin(); it != _operators.end(); it++)
 		if (*it == client)
-			return (true);
-	return (false);
+			return true;
+	return false;
 }
 
 bool Channel::isUser(Client *client)
@@ -360,8 +360,8 @@ bool Channel::isUser(Client *client)
 	t_users::iterator it;
 	for (it = _users.begin(); it != _users.end(); it++)
 		if (*it == client)
-			return (true);
-	return (false);
+			return true;
+	return false;
 }
 
 bool Channel::isInvited(Client *client)
@@ -369,8 +369,8 @@ bool Channel::isInvited(Client *client)
 	t_users::iterator it;
 	for (it = _invited.begin(); it != _invited.end(); it++)
 		if (*it == client)
-			return (true);
-	return (false);
+			return true;
+	return false;
 }
 
 bool Channel::showTopic(Client *client)
@@ -380,42 +380,42 @@ bool Channel::showTopic(Client *client)
 		sendMessage(client->getFd(), RPL_NOTOPIC(hostname, client->getNickname(), _name));
 	else
 		sendMessage(client->getFd(), RPL_TOPIC(hostname, client->getNickname(), _name, _topic));
-	return (_bot->updateStats(client), true);
+	return _bot->updateStats(client), true;
 }
 
 bool Channel::changeTopic(Client *client, t_string new_topic)
 {
 	if (!isInChannel(client))
-		return (sendMessage(client->getFd(), ERR_NOTONCHANNEL(hostname, client->getNickname(), _name)));
+		return sendMessage(client->getFd(), ERR_NOTONCHANNEL(hostname, client->getNickname(), _name));
 	if (_topicRest && !isOperator(client))
-		return (sendMessage(client->getFd(), ERR_CHANOPRIVSNEEDED(hostname, client->getNickname(), _name)));
+		return sendMessage(client->getFd(), ERR_CHANOPRIVSNEEDED(hostname, client->getNickname(), _name));
 	if (_topic != new_topic)
 	{
 		logs(_name, LOG_TOPIC(client->getNick(), new_topic));
 		_topic = new_topic;
 		broadcast(client, RPL_TOPIC2(client->getClient(), _name, _topic));
 		sendMessage(client->getFd(), RPL_TOPIC2(client->getClient(), _name, _topic));
-		return (_bot->updateStats(client), true);
+		return _bot->updateStats(client), true;
 	}
-	return (true);
+	return true;
 }
 
 Client *Channel::getBotClient()
 {
 	for (t_users::iterator it = _operators.begin(); it != _operators.end(); it++)
 		if ((*it)->getNick() == _bot->getName())
-			return ((*it));
-	return (NULL);
+			return *it;
+	return NULL;
 }
 
 bool Channel::kickUser(Client *client, Client *kicked, t_args args)
 {
 	if (!isInChannel(client))
-		return (sendMessage(client->getFd(), ERR_NOTONCHANNEL(hostname, client->getNickname(), _name)));
+		return sendMessage(client->getFd(), ERR_NOTONCHANNEL(hostname, client->getNickname(), _name));
 	if (!isOperator(client))
-		return (sendMessage(client->getFd(), ERR_CHANOPRIVSNEEDED(hostname, client->getNickname(), _name)));
+		return sendMessage(client->getFd(), ERR_CHANOPRIVSNEEDED(hostname, client->getNickname(), _name));
 	if (!isInChannel(kicked))
-		return (sendMessage(client->getFd(), ERR_USERNOTINCHANNEL(hostname, client->getNickname(), args[1], _name)));
+		return sendMessage(client->getFd(), ERR_USERNOTINCHANNEL(hostname, client->getNickname(), args[1], _name));
 	removeUser(kicked);
 	removeOperator(kicked);
 	_bot->updateStats(client);
@@ -424,5 +424,5 @@ bool Channel::kickUser(Client *client, Client *kicked, t_args args)
 	broadcast(client, RPL_KICK(client->getClient(), _name, args[1], reason));
 	if (client != kicked)
 		sendMessage(kicked->getFd(), RPL_KICK(client->getClient(), _name, args[1], reason));
-	return (sendMessage(client->getFd(), RPL_KICK(client->getClient(), _name, args[1], reason)));
+	return sendMessage(client->getFd(), RPL_KICK(client->getClient(), _name, args[1], reason));
 }
