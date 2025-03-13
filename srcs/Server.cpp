@@ -6,7 +6,7 @@
 /*   By: dcaetano <dcaetano@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 19:26:23 by dcaetano          #+#    #+#             */
-/*   Updated: 2025/02/16 10:33:08 by dcaetano         ###   ########.fr       */
+/*   Updated: 2025/03/13 10:35:22 by dcaetano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,17 +219,22 @@ bool Server::executeNick(int fd, t_input input, t_string command)
 		}
 		return sendMessage(fd, ERR_ERRONEUSNICKNAME(hostname, _clients[fd]->getNickname(), nick));
 	}
+	t_string guestNick = ft_tolower(nick);
 	for (int i = 0; i <= _fdmax; i++)
 	{
-		if (FD_ISSET(i, &_fds.all) && i != _socket.fd && i != fd && _clients[i]->getNick() == nick)
+		if (FD_ISSET(i, &_fds.all) && i != _socket.fd && i != fd)
 		{
-			if (_clients[fd]->getNick().empty())
+			t_string memberNick = ft_tolower(_clients[i]->getNick());
+			if (memberNick == guestNick)
 			{
-				sendMessage(fd, "Sorry... You need to enter a non-existing nickname...\n");
-				sendMessage(fd, "Exiting...\n");
-				return disconnect(fd, "Nickname is already in use");
+				if (_clients[fd]->getNick().empty())
+				{
+					sendMessage(fd, "Sorry... You need to enter a non-existing nickname...\n");
+					sendMessage(fd, "Exiting...\n");
+					return disconnect(fd, "Nickname is already in use");
+				}
+				return sendMessage(fd, ERR_NICKNAMEINUSE(hostname, _clients[fd]->getNickname(), nick));
 			}
-			return sendMessage(fd, ERR_NICKNAMEINUSE(hostname, _clients[fd]->getNickname(), nick));
 		}
 	}
 	logs("server", getInfoClient(_clients[fd]) + " " + LOG_NICK(nick));
@@ -259,13 +264,18 @@ bool Server::executeUser(int fd, t_input input, t_string command)
 		sendMessage(fd, "Exiting...\n");
 		return disconnect(fd, "Erroneus username");
 	}
+	t_string guestUser = ft_tolower(user);
 	for (int i = 0; i <= _fdmax; i++)
 	{
-		if (FD_ISSET(i, &_fds.all) && i != _socket.fd && i != fd && _clients[i]->getUser() == user)
+		if (FD_ISSET(i, &_fds.all) && i != _socket.fd && i != fd)
 		{
-			sendMessage(fd, "Sorry... You need to enter a non-existing username...\n");
-			sendMessage(fd, "Exiting...\n");
-			return disconnect(fd, "Username is already in use");
+			t_string memberUser = ft_tolower(_clients[i]->getUser());
+			if (memberUser == guestUser)
+			{
+				sendMessage(fd, "Sorry... You need to enter a non-existing username...\n");
+				sendMessage(fd, "Exiting...\n");
+				return disconnect(fd, "Username is already in use");
+			}
 		}
 	}
 	logs("server", getInfoClient(_clients[fd]) + " " + LOG_USER(user, real));

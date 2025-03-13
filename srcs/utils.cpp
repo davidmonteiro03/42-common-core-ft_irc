@@ -6,7 +6,7 @@
 /*   By: dcaetano <dcaetano@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 19:44:35 by dcaetano          #+#    #+#             */
-/*   Updated: 2025/02/16 10:37:56 by dcaetano         ###   ########.fr       */
+/*   Updated: 2025/03/13 10:32:05 by dcaetano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -407,4 +407,11 @@ bool checkPort(const char *arg)
 	if (tmp * sign <= 0 || tmp * sign > 65535)
 		return false;
 	return true;
+}
+
+t_string ft_tolower(t_string str)
+{
+	for (size_t i = 0; i < str.size(); i++)
+		str[i] = std::tolower(str[i]);
+	return str;
 }
