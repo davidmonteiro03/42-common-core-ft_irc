@@ -39,5 +39,5 @@ int main(int argc, char **argv)
 		std::cout << e.what() << std::endl;
 		return EXIT_FAILURE;
 	}
-	return (void)argc, (void)argv, EXIT_SUCCESS;
+	return EXIT_SUCCESS;
 }
