@@ -6,7 +6,7 @@
 /*   By: dcaetano <dcaetano@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 19:23:39 by dcaetano          #+#    #+#             */
-/*   Updated: 2025/03/13 10:26:37 by dcaetano         ###   ########.fr       */
+/*   Updated: 2025/03/14 23:55:58 by dcaetano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,3 +158,4 @@ bool checkPort(const char *);
 t_string ft_tolower(t_string);
 
 extern char hostname[256], *ip;
+extern bool running;

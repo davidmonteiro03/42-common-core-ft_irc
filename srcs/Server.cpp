@@ -6,7 +6,7 @@
 /*   By: dcaetano <dcaetano@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 19:26:23 by dcaetano          #+#    #+#             */
-/*   Updated: 2025/03/13 10:35:22 by dcaetano         ###   ########.fr       */
+/*   Updated: 2025/03/14 23:56:48 by dcaetano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void Server::execute(void)
 	FD_ZERO(&_fds.all);
 	FD_SET(_socket.fd, &_fds.all);
 	_fdmax = _socket.fd;
-	while (42)
+	while (running)
 	{
 		_fds.read = _fds.write = _fds.all;
 		if (select(_fdmax + 1, &_fds.read, &_fds.write, NULL, NULL) < 0)

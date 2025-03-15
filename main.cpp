@@ -6,7 +6,7 @@
 /*   By: dcaetano <dcaetano@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 19:15:13 by dcaetano          #+#    #+#             */
-/*   Updated: 2025/02/16 10:38:16 by dcaetano         ###   ########.fr       */
+/*   Updated: 2025/03/14 23:56:58 by dcaetano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,12 @@
 
 Server *server = NULL;
 char hostname[256], *ip;
+bool running = true;
 
 void signal_handler(int sig)
 {
 	if (sig == SIGINT)
-	{
-		if (server != NULL)
-			delete server;
-		logs("server", LOG_SHUTDOWN);
-		exit(EXIT_SUCCESS);
-	}
+		running = false;
 }
 
 int main(int argc, char **argv)
@@ -36,13 +32,14 @@ int main(int argc, char **argv)
 		server = new Server(argc, argv);
 		server->getInfo();
 		server->execute();
-		if (server != NULL)
-			delete server;
 	}
 	catch (std::exception &e)
 	{
 		std::cout << e.what() << std::endl;
 		return EXIT_FAILURE;
 	}
+	if (server != NULL)
+		delete server;
+	logs("server", LOG_SHUTDOWN);
 	return (void)argc, (void)argv, EXIT_SUCCESS;
 }
