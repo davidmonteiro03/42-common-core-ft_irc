@@ -6,7 +6,7 @@
 /*   By: dcaetano <dcaetano@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 19:26:23 by dcaetano          #+#    #+#             */
-/*   Updated: 2025/03/14 23:56:48 by dcaetano         ###   ########.fr       */
+/*   Updated: 2026/06/17 08:57:58 by dcaetano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 Server::Server(int argc, char **argv)
 {
-	if (argc != 3 || (argc == 3 && (argv[1][0] == '\0' || argv[2][0] == '\0')))
+	if (argc != 3)
 		throw Server::ErrorUsage();
 	_socket = newSocket(argv[1]);
 	_port = std::atoi(argv[1]);

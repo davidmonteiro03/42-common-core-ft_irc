@@ -6,7 +6,7 @@
 /*   By: dcaetano <dcaetano@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/07 19:44:35 by dcaetano          #+#    #+#             */
-/*   Updated: 2025/03/13 10:32:05 by dcaetano         ###   ########.fr       */
+/*   Updated: 2026/06/17 08:59:53 by dcaetano         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,50 @@
 
 t_socket newSocket(const char *arg)
 {
+	if (checkPort(arg) == false)
+		throw Server::InvalidPort();
 	t_socket ret;
-
 	ret.fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (ret.fd < 0)
 		throw Server::ErrorCreatingSocket();
 	int opt = 1;
 	if (setsockopt(ret.fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) != 0)
+	{
+		close(ret.fd);
 		throw Server::ErrorCreatingSocket();
-	if (checkPort(arg) == false)
-		throw Server::InvalidPort();
+	}
 	ret.len = sizeof(ret.addr);
 	std::memset(&ret.addr, 0, ret.len);
 	ret.addr.sin_family = AF_INET;
 	ret.addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	ret.addr.sin_port = htons(std::atoi(arg));
 	if (bind(ret.fd, (const sockaddr *)&ret.addr, ret.len) != 0)
+	{
+		close(ret.fd);
 		throw Server::ErrorBindingSocket();
+	}
 	if (listen(ret.fd, 100) != 0)
+	{
+		close(ret.fd);
 		throw Server::ErrorListenSocket();
+	}
 	if (gethostname(ret.hostname, sizeof(ret.hostname)) == -1)
+	{
+		close(ret.fd);
 		throw Server::ErrorGettingHostname();
+	}
 	struct hostent *host_entry = gethostbyname(ret.hostname);
 	if (host_entry == NULL)
+	{
+		close(ret.fd);
 		throw Server::ErrorGettingHostname();
+	}
 	ret.ip = inet_ntoa(*((struct in_addr *)host_entry->h_addr_list[0]));
 	if (ret.ip == NULL)
+	{
+		close(ret.fd);
 		throw Server::ErrorGettingIP();
+	}
 	return ret;
 }
 
